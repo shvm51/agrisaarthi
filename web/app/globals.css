@@ -61,24 +61,11 @@
   --shadow-sheet: 0 -8px 32px rgb(26 26 26 / 0.16);
 
   --animate-shimmer: shimmer 1.6s linear infinite;
-  /* No fill mode: the `to` keyframe equals the element's natural style, so if
-     the animation never runs the content simply renders visible. `both` used
-     to pin opacity 0 forever on devices that freeze CSS animations. */
-  --animate-rise: rise 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-scanline: scanline 2.2s ease-in-out infinite;
 
   @keyframes shimmer {
     from { background-position: -400px 0; }
     to { background-position: 400px 0; }
-  }
-  /* Entrance animation is transform-only ON PURPOSE. An earlier version faded
-     opacity 0 -> 1, but on devices that freeze CSS animations (OEM battery
-     savers) or restart them, a stuck `from` keyframe pinned content at
-     opacity 0 forever -> blank page. With no opacity in the keyframes, the
-     worst case is content resting 10px lower: always visible. */
-  @keyframes rise {
-    from { transform: translateY(10px); }
-    to { transform: translateY(0); }
   }
   @keyframes scanline {
     0%, 100% { top: 6%; }
@@ -141,14 +128,15 @@ body {
   background-size: 800px 100%;
 }
 
-/* Entrance animations never touch opacity (see `rise` keyframes above), so content
-   is always visible even where CSS animations are frozen. For users who prefer
-   reduced motion, skip the entrance animation entirely. */
-@media (prefers-reduced-motion: reduce) {
-  .animate-rise {
-    animation: none !important;
-    transform: none !important;
-  }
+/* Entrance motion is DISABLED on purpose. Proven in testing: on devices where CSS
+   animations freeze (OEM battery savers, throttled webviews), an element with
+   a frozen animation may not paint at all — blank page with only the
+   animation-free bottom nav visible. Removing opacity from the keyframes was
+   not enough; any animation on the element risks no-paint. So .animate-rise
+   is intentionally a no-op: content always renders, no motion dependency.
+   Motion can be re-introduced later via a mechanism verified to paint. */
+.animate-rise {
+  animation: none;
 }
 
 /* Bottom sheet */
