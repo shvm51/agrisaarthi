@@ -55,6 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             "var(--font-inter), var(--font-noto-deva), ui-sans-serif, system-ui, sans-serif",
         }}
       >
+        <noscript>
+          <style>{`.animate-rise{animation:none!important;opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <AppShell>{children}</AppShell>
       </body>
     </html>

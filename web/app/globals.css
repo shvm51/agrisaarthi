@@ -133,6 +133,30 @@ body {
   background-size: 800px 100%;
 }
 
+/* Entrance-animation safety net.
+   Some OEM Android battery-savers freeze CSS animations entirely instead of
+   exposing prefers-reduced-motion. An entrance animation stuck at its `from`
+   keyframe (opacity 0, fill both) would then leave page content invisible
+   forever — the bottom nav stays visible only because it has no entrance
+   animation. The AnimationWatchdog (app-shell.tsx) probes once on load: if a
+   0.01ms probe animation hasn't progressed after real frames elapse, it adds
+   .anim-frozen to <html>, which forces entrance-animated content visible. */
+@keyframes agrisaarthi-anim-probe {
+  to { opacity: 1; }
+}
+.anim-frozen .animate-rise {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* Bottom sheet */
 .sheet-backdrop {
   background: rgb(12 20 15 / 0.5);
