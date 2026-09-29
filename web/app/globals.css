@@ -71,9 +71,14 @@
     from { background-position: -400px 0; }
     to { background-position: 400px 0; }
   }
+  /* Entrance animation is transform-only ON PURPOSE. An earlier version faded
+     opacity 0 -> 1, but on devices that freeze CSS animations (OEM battery
+     savers) or restart them, a stuck `from` keyframe pinned content at
+     opacity 0 forever -> blank page. With no opacity in the keyframes, the
+     worst case is content resting 10px lower: always visible. */
   @keyframes rise {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { transform: translateY(10px); }
+    to { transform: translateY(0); }
   }
   @keyframes scanline {
     0%, 100% { top: 6%; }
@@ -136,26 +141,12 @@ body {
   background-size: 800px 100%;
 }
 
-/* Entrance-animation safety net.
-   Some OEM Android battery-savers freeze CSS animations entirely instead of
-   exposing prefers-reduced-motion. An entrance animation stuck at its `from`
-   keyframe (opacity 0, fill both) would then leave page content invisible
-   forever — the bottom nav stays visible only because it has no entrance
-   animation. The AnimationWatchdog (app-shell.tsx) probes once on load: if a
-   0.01ms probe animation hasn't progressed after real frames elapse, it adds
-   .anim-frozen to <html>, which forces entrance-animated content visible. */
-@keyframes agrisaarthi-anim-probe {
-  to { opacity: 1; }
-}
-.anim-frozen .animate-rise {
-  animation: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
+/* Entrance animations never touch opacity (see `rise` keyframes above), so content
+   is always visible even where CSS animations are frozen. For users who prefer
+   reduced motion, skip the entrance animation entirely. */
 @media (prefers-reduced-motion: reduce) {
   .animate-rise {
     animation: none !important;
-    opacity: 1 !important;
     transform: none !important;
   }
 }

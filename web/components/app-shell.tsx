@@ -62,47 +62,6 @@ function ServiceWorkerRegister() {
   return null;
 }
 
-/**
- * Entrance-animation watchdog.
- *
- * Some OEM Android battery-savers freeze CSS animations entirely instead of
- * exposing prefers-reduced-motion. An entrance animation (`.animate-rise`,
- * opacity 0 → 1, fill both) stuck at its `from` keyframe leaves page content
- * invisible forever while the animation-free bottom nav stays visible.
- * Probe once on load: run a 0.01ms opacity animation on a hidden element and
- * check after real frames elapse. If it hasn't progressed, animations are
- * frozen — add .anim-frozen to <html> so CSS forces animated content visible.
- * A timeout fallback covers the case where rAF itself is throttled.
- */
-function AnimationWatchdog() {
-  useEffect(() => {
-    const probe = document.createElement("div");
-    probe.setAttribute("aria-hidden", "true");
-    probe.style.cssText =
-      "position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;animation:agrisaarthi-anim-probe 0.01ms linear both;";
-    document.body.appendChild(probe);
-    let settled = false;
-    const check = () => {
-      if (settled) return;
-      settled = true;
-      try {
-        if (getComputedStyle(probe).opacity !== "1") {
-          document.documentElement.classList.add("anim-frozen");
-        }
-      } finally {
-        probe.remove();
-      }
-    };
-    requestAnimationFrame(() => requestAnimationFrame(check));
-    const fallback = window.setTimeout(check, 500);
-    return () => {
-      window.clearTimeout(fallback);
-      probe.remove();
-    };
-  }, []);
-  return null;
-}
-
 function OfflineBanner() {
   const { t } = useLang();
   const [online, setOnline] = useState(true);
@@ -167,7 +126,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       <SessionProvider>
         <ThemeInit />
         <LangSync />
-        <AnimationWatchdog />
         <ServiceWorkerRegister />
         <Shell>{children}</Shell>
       </SessionProvider>
