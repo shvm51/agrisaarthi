@@ -4,7 +4,7 @@
  */
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type Lang = "en" | "hi" | "mr";
 
@@ -828,25 +828,32 @@ export function LangProvider({ children }: { children: ReactNode }) {
     } catch { /* ignore */ }
   }, []);
 
-  const setLang = (l: Lang) => {
+  const setLang = useCallback((l: Lang) => {
     setLangState(l);
     try {
       localStorage.setItem(LANG_KEY, l);
     } catch { /* ignore */ }
-  };
+  }, []);
 
-  const t = (key: TKey, vars?: Record<string, string | number>) => {
-    let s: string = dictionaries[lang][key] ?? dictionaries.en[key] ?? key;
-    if (vars) {
-      for (const [k, v] of Object.entries(vars)) {
-        s = s.replace(`{${k}}`, String(v));
+  // Stable identity: pages use `t` in useEffect/useCallback dependency arrays,
+  // so it must not be a new function on every provider render.
+  const t = useCallback(
+    (key: TKey, vars?: Record<string, string | number>) => {
+      let s: string = dictionaries[lang][key] ?? dictionaries.en[key] ?? key;
+      if (vars) {
+        for (const [k, v] of Object.entries(vars)) {
+          s = s.replace(`{${k}}`, String(v));
+        }
       }
-    }
-    return s;
-  };
+      return s;
+    },
+    [lang],
+  );
+
+  const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
 
   return (
-    <LangContext.Provider value={{ lang, setLang, t }}>
+    <LangContext.Provider value={value}>
       {children}
     </LangContext.Provider>
   );

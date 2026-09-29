@@ -61,7 +61,10 @@
   --shadow-sheet: 0 -8px 32px rgb(26 26 26 / 0.16);
 
   --animate-shimmer: shimmer 1.6s linear infinite;
-  --animate-rise: rise 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* No fill mode: the `to` keyframe equals the element's natural style, so if
+     the animation never runs the content simply renders visible. `both` used
+     to pin opacity 0 forever on devices that freeze CSS animations. */
+  --animate-rise: rise 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   --animate-scanline: scanline 2.2s ease-in-out infinite;
 
   @keyframes shimmer {
