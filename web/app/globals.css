@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============ AgriSaarthi design tokens (from DESIGN.md brand contract) ============ */
+@theme {
+  --font-sans: "Inter", "Noto Sans Devanagari", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", "Noto Sans Devanagari", ui-serif, Georgia, serif;
+
+  /* Deep agricultural green */
+  --color-pine-50: #eef4ec;
+  --color-pine-100: #dbe8d8;
+  --color-pine-200: #bcd4b8;
+  --color-pine-600: #3f7d5c;
+  --color-pine-700: #2d6a4f;
+  --color-pine-800: #23513c;
+  --color-pine-900: #1b4332;
+  --color-pine-950: #0c1a13;
+
+  /* Muted olive */
+  --color-olive-100: #e9ecdb;
+  --color-olive-500: #7c8f68;
+  --color-olive-600: #6b7f59;
+  --color-olive-700: #55663f;
+
+  /* Warm gold */
+  --color-gold-100: #f8edcb;
+  --color-gold-500: #d4a017;
+  --color-gold-600: #a97e0f;
+  --color-gold-700: #7d5d0b;
+
+  /* Warm neutrals */
+  --color-cream-50: #faf7f0;
+  --color-cream-100: #f5f0e3;
+  --color-cream-200: #f0ead6;
+  --color-cream-300: #e3d9bd;
+
+  /* Ink */
+  --color-ink-400: #9a9a90;
+  --color-ink-500: #6e6e66;
+  --color-ink-600: #4c4c45;
+  --color-ink-700: #33332e;
+  --color-ink-900: #1a1a1a;
+
+  /* Semantic */
+  --color-risk-100: #fdeee4;
+  --color-risk-500: #e76f51;
+  --color-risk-600: #c74e2c;
+  --color-danger-100: #fbe4e4;
+  --color-danger-500: #d62828;
+  --color-danger-600: #c1121f;
+
+  /* Dark theme surfaces */
+  --color-night-900: #12140f;
+  --color-night-800: #1e241b;
+  --color-night-700: #28301f;
+  --color-night-100: #f2efe6;
+  --color-night-400: #a8a496;
+
+  --shadow-card: 0 1px 2px rgb(26 26 26 / 0.05), 0 4px 16px rgb(26 26 26 / 0.06);
+  --shadow-sheet: 0 -8px 32px rgb(26 26 26 / 0.16);
+
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-rise: rise 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-scanline: scanline 2.2s ease-in-out infinite;
+
+  @keyframes shimmer {
+    from { background-position: -400px 0; }
+    to { background-position: 400px 0; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scanline {
+    0%, 100% { top: 6%; }
+    50% { top: 90%; }
+  }
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+body {
+  background: var(--color-cream-50);
+  color: var(--color-ink-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.dark body {
+  background: var(--color-night-900);
+  color: var(--color-night-100);
+}
+
+/* App frame: mobile-first column, expands gracefully on desktop */
+.app-frame {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 30rem; /* 480px */
+  min-height: 100dvh;
+  position: relative;
+}
+@media (min-width: 48rem) {
+  .app-frame {
+    border-inline: 1px solid var(--color-cream-200);
+  }
+  .dark .app-frame {
+    border-color: var(--color-night-700);
+  }
+}
+
+/* Safe-area helpers */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+.pt-safe { padding-top: env(safe-area-inset-top); }
+
+/* Numbers: tabular, display font for hero figures */
+.tnum { font-variant-numeric: tabular-nums; }
+.hero-num { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-cream-200) 25%, var(--color-cream-100) 50%, var(--color-cream-200) 75%);
+  background-size: 800px 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 0.75rem;
+}
+.dark .skeleton {
+  background: linear-gradient(90deg, var(--color-night-700) 25%, var(--color-night-800) 50%, var(--color-night-700) 75%);
+  background-size: 800px 100%;
+}
+
+/* Bottom sheet */
+.sheet-backdrop {
+  background: rgb(12 20 15 / 0.5);
+  animation: fade 0.2s ease both;
+}
+.sheet-panel {
+  animation: sheet-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  box-shadow: var(--shadow-sheet);
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheet-up {
+  from { transform: translateY(48px); opacity: 0.6; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Scan viewfinder */
+.viewfinder { position: relative; overflow: hidden; }
+.viewfinder::after {
+  content: "";
+  position: absolute;
+  left: 8%; right: 8%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-gold-500);
+  box-shadow: 0 0 12px var(--color-gold-500);
+  animation: var(--animate-scanline);
+}
+
+/* Hide scrollbars on horizontal chip rails */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Focus visibility */
+:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
