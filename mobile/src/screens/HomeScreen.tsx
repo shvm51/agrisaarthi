@@ -16,7 +16,7 @@ import { Badge, Card, ErrorState, FadeIn, SectionTitle, Skeleton } from '../comp
 import { api, TodayAction } from '../services/api';
 import { DEMO_PROFILE, getFarmProfile, FarmProfile } from '../services/storage';
 
-const CATEGORY_ICON: Record<TodayAction['category'], string> = {
+const CATEGORY_ICON: Record<TodayAction['category'], React.ComponentProps<typeof MaterialCommunityIcons>['name']> = {
   WEATHER: 'weather-rainy',
   DISEASE: 'virus',
   IRRIGATION: 'water',
@@ -24,6 +24,7 @@ const CATEGORY_ICON: Record<TodayAction['category'], string> = {
   CROP: 'sprout',
   SCHEME: 'bank',
   INSURANCE: 'shield-check',
+  TASK: 'check-circle-outline',
 };
 
 function greetingKey(hour: number) {

@@ -3,6 +3,7 @@
  * Earthy, premium, mobile-first. Color is semantic — never the only
  * carrier of state (see Badge: always icon + text).
  */
+import type { TextStyle } from 'react-native';
 
 // ── Brand palette ──────────────────────────────────────────────
 export const palette = {
@@ -88,7 +89,7 @@ export const darkTheme: Theme = {
 };
 
 // ── Typography (compact for small mobile screens) ──────────────
-export const type = {
+export const type: Record<string, TextStyle> = {
   display: { fontSize: 30, lineHeight: 36, fontWeight: '700' as const },
   h1: { fontSize: 24, lineHeight: 30, fontWeight: '700' as const },
   h2: { fontSize: 20, lineHeight: 26, fontWeight: '700' as const },
@@ -107,7 +108,7 @@ export const type = {
   },
   button: { fontSize: 16, lineHeight: 22, fontWeight: '600' as const },
   // Tabular numerals for prices, weather values, risk scores.
-  numeric: { fontVariant: ['tabular-nums'] as const },
+  numeric: { fontVariant: ['tabular-nums'] },
 };
 
 // ── Spacing / radius / shadow ──────────────────────────────────
