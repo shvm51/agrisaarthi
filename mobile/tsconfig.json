@@ -1,0 +1,1 @@
+{"compilerOptions":{"esModuleInterop":true,"noUncheckedIndexedAccess":false,"resolveJsonModule":true,"skipLibCheck":true,"strict":true},"extends":"expo/tsconfig.base","include":["App.tsx","src/**/*"]}

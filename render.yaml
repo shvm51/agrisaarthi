@@ -1,0 +1,15 @@
+# Render blueprint — deploy the API in ~5 minutes from the dashboard.
+# Push this repo to GitHub, then Render → New → Blueprint → select repo.
+services:
+  - type: web
+    name: agrisaarthi-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DISEASE_CONFIDENCE_HIGH
+        value: "0.75"
+      - key: DISEASE_CONFIDENCE_MEDIUM
+        value: "0.5"
+      # Add later (Render dashboard → Environment): SUPABASE_URL, SUPABASE_SERVICE_KEY, WEATHER_API_KEY
